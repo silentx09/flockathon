@@ -1,17 +1,16 @@
 {
-  "name": "flock-alarms",
-  "version": "0.0.1",
-  "description": "Alarms for Flock",
+  "name": "byte-me",
+  "version": "1.0",
+  "description": "DevOps Command center",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon -e js,html,css"
   },
-  "author": "Riva FZC",
-  "license": "ISC",
+  "author": "Piyush Santwani, Manjula Dube",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.14.1",
     "flockos": "0.0.6",
-    "mustache": "^2.3.0",
-    "nodemon": "^1.11.0"
+    "mustache": "^2.3.0"
   }
 }
