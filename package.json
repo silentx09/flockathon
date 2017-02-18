@@ -1,0 +1,17 @@
+{
+  "name": "flock-alarms",
+  "version": "0.0.1",
+  "description": "Alarms for Flock",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Riva FZC",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1",
+    "flockos": "0.0.6",
+    "mustache": "^2.3.0",
+    "nodemon": "^1.11.0"
+  }
+}
