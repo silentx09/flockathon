@@ -1,0 +1,19 @@
+/aws configure accessKey=AKIAJAMZZ6VFNVMUPBQQ secretKey=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 region=us-east-1
+
+/aws list-instances
+/aws show-instance i-083ef140b35a11a3d
+/aws start-instance i-083ef140b35a11a3d
+/aws stop-instance i-083ef140b35a11a3d
+/aws delete-instance i-083ef140b35a11a3d
+/aws reboot-instance i-083ef140b35a11a3d
+/aws list-buckets
+/aws list-files manjula-dev
+/aws d-list-tables
+/aws d-table-status flockathon
+/aws d-table-size flockathon
+/aws d-table-count flockathon
+/aws d-table-date flockathon
+/aws list-apis
+/aws list-resources API-Gateway1
+/aws list-stages API-Gateway1
+

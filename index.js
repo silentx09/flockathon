@@ -5,6 +5,9 @@ var Mustache = require('mustache');
 var nunjucks  = require('nunjucks');
 var bodyParser = require('body-parser');
 
+global.AWS = require('aws-sdk');
+global.AWSUsers = {};
+global.userTokens = {};
 global.flock = require('flockos');
 global.assert = require('assert');
 global.app = express();
@@ -42,6 +45,19 @@ app.post("/event", function(req, res) {
 });
 
 app.get("/config", function(req, res){
-	res.render("config.html");
+	//res.render("config.html");
+	res.send("OK");
 });
 
+app.get("/test", function(req, res){
+	res.render("test.html", {data : JSON.stringify(userTokens)})
+});
+
+/**
+ * Dummy settings
+**/
+function dummy(){
+	userTokens["u:yojzjjbd1btlzvml"] = "12dcb5a8-a30b-4d91-95f2-dd4fd425762b";
+}
+
+dummy()
