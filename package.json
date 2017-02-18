@@ -1,6 +1,6 @@
 {
   "name": "byte-me",
-  "version": "1.0",
+  "version": "0.0.1",
   "description": "DevOps Command center",
   "main": "index.js",
   "scripts": {
@@ -9,11 +9,13 @@
   "author": "Piyush Santwani, Manjula Dube",
   "license": "MIT",
   "dependencies": {
+    "assert": "^1.4.1",
     "body-parser": "^1.16.1",
     "chrono-node": "^1.2.5",
     "express": "^4.14.1",
     "flockos": "0.0.6",
     "jquery": "^3.1.1",
+    "mongodb": "^2.2.24",
     "mustache": "^2.3.0",
     "nodemon": "^1.11.0",
     "nunjucks": "^3.0.0"
