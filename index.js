@@ -3,6 +3,7 @@ var fs = require('fs');
 var util = require('util');
 var Mustache = require('mustache');
 var nunjucks  = require('nunjucks');
+var bodyParser = require('body-parser');
 
 global.flock = require('flockos');
 global.assert = require('assert');
@@ -14,6 +15,8 @@ var mongoOperations = require('./app/db/mongo_operations');
 
 app.use(flock.events.tokenVerifier);
 app.use(express.static(`${__dirname}/public`));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.set('view engine', 'html');
 app.listen(8080, function () {
     console.log('Listening on 8080');
@@ -34,7 +37,11 @@ nunjucks.configure(`${__dirname}/views`, {
   express   : app
 });
 
-app.post('/events', flock.events.listener);
-app.get('/config', function(req, res){
-	res.render('config');
+app.post("/event", function(req, res) {	
+	flockEvents.processEvent(req.body, res)
 });
+
+app.get("/config", function(req, res){
+	res.render("config.html");
+});
+
