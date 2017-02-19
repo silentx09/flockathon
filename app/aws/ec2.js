@@ -8,23 +8,12 @@ function listInstances(uid, callback){
 	if(ec2Obj[uid]){
 		ec2Obj[uid].describeInstances(function(err, result) {
 			if (err)
+			{
 				console.log(err);
-			let inst_id = '-';
-			let response = '';
-			for (let i = 0; i < result.Reservations.length; i++) {
-				let res = result.Reservations[i];
-				let instances = res.Instances;
-				console.log(instances);
-				for (let j = 0; j < instances.length; j++) {
-					let instanceID = instances[j].InstanceId;
-					let state = instances[j].State.Code;
-					let public_ip = instances[j].PublicIpAddress;
-					let imageID = instances[j].ImageId;
-					console.log('instance ' + instanceID + " state " + state + " public ip " + public_ip + 'image id ' + imageID);
-					response += 'instance ' + instanceID + " state " + state + " public ip " + public_ip + 'image id ' + imageID + '.\n'
-				}
 			}
-			return callback(response)
+			else{
+				return callback(result)
+			}		
 		});
 	}
 	else{

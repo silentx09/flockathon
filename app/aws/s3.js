@@ -18,8 +18,7 @@ function listBuckets(uid, callback) {
 	}
 	else{
 		console.log("s3Object is not set for this user.");
-	}
-	
+	}	
 }
 
 /**
