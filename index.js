@@ -105,13 +105,13 @@ app.post("/receive", function(req, res){
     		})  	
 		}
 		else if(req['headers']['x-amz-sns-message-type'] === "Notification"){
-			var bodyarr = []
+      var bodyarr = []
 			req.on('data', function(chunk){
       			bodyarr.push(chunk);
     		})  
     		req.on('end', function(){
       			var notificationObj = JSON.parse(bodyarr.join(''));
-      			console.log(notificationObj)
+      			console.log(notificationObj);
       			notificationObj['name'] = "alertNotification";
       			flockEvents.processEvent(notificationObj, res)
       			res.send("OK");
@@ -136,4 +136,4 @@ function dummy(){
 	userTopics["arn:aws:sns:us-east-1:418181703419:status_alert"] = ["u:yojzjjbd1btlzvml", "u:vfeexxqpnnnktfnv"];
 }
 
-//dummy()
+dummy()

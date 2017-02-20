@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Forward Widget</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.min.css" />
+  	<!-- <style>
+  		.list-of-users{
+  			width: 30%;
+    		height: 40px;
+  		}
+  		.btn-success{
+  			color: #fff;
+    		background-color: #0abe51;
+    		border-color: #0abe51;
+  		}
+        body{
+            margin: 0;
+    		padding: 0;
+    		font: normal 13px Lucida Grande,Arial,sans-serif;
+    		background: #f6f6f6;
+        }
+  </style> -->
+ 
+<body>
+
+<div class="jumbotron" style="height: 10px;">
+    <p style='padding:10px; margin-top: -35px;'>Forward the selected message to any user/group.</p> 
+</div>
+
+<div class="col-lg-12">
+	<textarea id="commentMsg" name="message" style="width: 100%;height: 100px;padding: 7px 1% 0;font-family: inherit; font-size:20px;" class="form-group" placeholder="Enter you comment here"></textarea>
+</div>
+
+<div class="col-md-12">
+		<div class="col-md-6">
+		<select id="team_members" name="list-of-users">
+		</select>
+		</div>
+		<div class="col-md-6">
+    	<button style='float: right;' type="button" id="cancel" class="btn btn-default">Cancel</button>
+   		<button style="float: right;margin-right: 5px;" type="button" id="share" class="btn btn-success share-button">Share</button>
+</div>	
+
+<!-- <div class="container" style="margin-top:30px">
+<form id="shareButton">
+	<div class="row">
+		<div class="col-lg-12">
+			<textarea id="commentMsg" name="message" style="width: 100%;height: 100px;border-radius:3px;border: 1px solid #c3c2c2;padding: 7px 1% 0;font-family: inherit;    border-radius: 16px;" class="form-group" placeholder="Enter you message here"></textarea>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-lg-6">
+		<select class="list-of-users" id="team_members" name="list-of-users">
+			
+		</select>
+		</div>
+		<div class="col-lg-6" style="text-align:right">
+    	<button type="button" id="cancel" class="btn btn-default btn-lg">Cancel</button>
+   		<button type="button" id="share" class="btn btn-success share-button btn-lg">Share</button>
+   	</div>	
+	</div>
+</form>	
+</div> -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">	
+</script>
+<script type="text/javascript" src="https://apps-static.flock.co/js-sdk/0.1.0/flock.js"></script>
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+          <script type="text/javascript">
+               $(document).ready(function() {
+               $('.selectpicker').selectpicker();
+              });
+          </script> -->
+<script>
+	
+    function getUserId(callback){
+    	var url = window.location.href;
+    	var temp = url.substring(url.indexOf("userId") + 19, url.length);
+    	var userId = "u:" + temp.split("%22%2C%22")[0];
+    	return callback(userId);
+    }
+
+    function getMessageId(callback){
+    	var url = window.location.href;
+    	console.log(url);
+    	var temp = url.substring(url.indexOf("messageUids") + 23, url.length);
+    	var msgIds = temp.split("%22")[0];
+    	return callback(msgIds);
+    }
+
+    $("#share").on("click", function(event){
+    	var comment = $("#commentMsg").val() || "";
+    	
+    	var sendToUser = $('#team_members').find(":selected").attr('value');
+    	
+    	getMessageId(function(msgs){
+    		getChatId(function(chat){
+    			getUserId(function(userId){
+    				fetchMessage(userId, msgs, chat, sendToUser, comment, function(result){
+    					console.log(result)
+    				})
+    			});
+    		})
+    	})
+    });
+
+    $("#cancel").on("click", function(event){
+    	flock.close();
+    })
+
+    function getChatId(callback){
+    	var url = window.location.href;
+    	console.log(url);
+    	var temp = url.substring(url.indexOf("chat%22") + 13, url.length);
+    	console.log(temp)
+    	var literal = temp.substring(0,1);
+    	temp = url.substring(url.indexOf("chat%22") + 17, url.length);
+    	console.log(temp)
+    	var id = literal + ":" + temp.split("%22")[0];
+    	return callback(id);
+    }
+
+    getUserId(function(userId){
+    	getUsers(userId,function(users){
+    		setSelectOptionsForUsers(users);
+    		getGroups(userId, function(groups){
+    			console.log(groups);
+    			setSelectOptionsForGroups(groups);
+    		});
+    	})
+    });
+
+    function setSelectOptionsForUsers(users){
+    	users.forEach(function(user) {   
+     		$('#team_members')
+         	.append($("<option></option>")
+            .attr("value",user.id)
+            .text(user.firstName + " " + user.lastName)); 
+		});
+    }
+
+    function setSelectOptionsForGroups(groups){
+    	groups.forEach(function(group) {   
+     		$('#team_members')
+         	.append($("<option></option>")
+            .attr("value",group.id)
+            .text(group.name)); 
+		});
+    }
+
+    function getUsers(uid,callback){
+    	$.ajax({
+    		"url" : "https://bafc9b3e.ngrok.io/users",
+    		"method": "POST",
+    		data: { uid: uid }
+    	}).done(function(result) {
+    		return callback(result);
+  		});
+    }
+
+    function getGroups(uid,callback){
+    	$.ajax({
+    		"url" : "https://bafc9b3e.ngrok.io/groups",
+    		"method": "POST",
+    		data: { uid: uid }
+    	}).done(function(result) {
+    		return callback(result);
+  		});
+    }
+
+    function fetchMessage(uid, msgs, chat, sendToUser, comment, callback){
+    	console.log(msgs);
+    	var data = {
+    		uid : uid,
+    		chat : chat,
+    		msg : msgs,
+    		sendToUser : sendToUser,
+    		comment: comment
+    	}
+    	console.log(data)
+    	$.ajax({
+    		"url" : "https://bafc9b3e.ngrok.io/fetchMessageAndSend",
+    		"method": "POST",
+    		data: data
+    	}).done(function(result) {
+    		console.log(flock);
+    		flock.close();
+    		return callback(result);
+  		});
+    }
+
+</script>
+</body>
+</html>

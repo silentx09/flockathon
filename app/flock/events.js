@@ -5,6 +5,7 @@ var s3 = require('../aws/s3');
 var dynamo = require('../aws/dynamo');
 var apiGateway = require('../aws/api_gateway');
 var sns = require('../aws/sns');
+var flockMethods = require('./events');
 
 function processEvent(event, res){
 	console.log(event.name)
@@ -24,7 +25,6 @@ function processEvent(event, res){
 			sns.confirmSubscription(_userId, {'Token' : token, 'TopicArn' : topicArn}, function(topics){
 				console.log("Subscription confirmed");
 				res.send("OK");
-				//sendMessage(userTokens[event.userId], _chatId, topics)
 			});
 		break;
 		case "alertNotification" :
@@ -33,9 +33,17 @@ function processEvent(event, res){
 			var _toArr = userTopics[event.TopicArn];
 			var subject = event.Subject;
 			var message = event.Message;
+			console.log(message);
+			console.log(_toArr)
+			
 			_toArr.forEach(function(to){
-				sendMessage(_token, to, message);
+				flockMethods.simpleSendMessage(_token,{
+					to: to,
+	    			text: message,
+	    			attachments : []
+				});
 			});
+			
 		break;
 	}
 }
